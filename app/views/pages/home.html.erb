@@ -1,0 +1,932 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --neon-cyan: #00f5ff;
+    --neon-magenta: #ff00ff;
+    --neon-purple: #b026ff;
+    --deep-black: #0a0a0f;
+    --panel-bg: rgba(15, 15, 25, 0.85);
+  }
+
+  .nexttrack-container {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--deep-black);
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nexttrack-container * {
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* Animated background grid */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Animated equalizer bars */
+  .eq-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 4px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .eq-bar {
+    width: 6px;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-magenta));
+    border-radius: 3px 3px 0 0;
+    animation: eqBounce 0.8s ease-in-out infinite;
+  }
+
+  @keyframes eqBounce {
+    0%, 100% { height: 20px; }
+    50% { height: var(--max-height, 100px); }
+  }
+
+  /* Glowing orbs */
+  .glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+
+  .glow-orb-1 {
+    width: 400px;
+    height: 400px;
+    background: var(--neon-cyan);
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+  }
+
+  .glow-orb-2 {
+    width: 300px;
+    height: 300px;
+    background: var(--neon-magenta);
+    bottom: -50px;
+    right: -50px;
+    animation-delay: -4s;
+  }
+
+  .glow-orb-3 {
+    width: 250px;
+    height: 250px;
+    background: var(--neon-purple);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -2s;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -20px) scale(1.1); }
+    50% { transform: translate(-20px, 30px) scale(0.95); }
+    75% { transform: translate(20px, 20px) scale(1.05); }
+  }
+
+  /* Title styling */
+  .title-glow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 40px rgba(0, 245, 255, 0.5);
+    position: relative;
+    animation: titleGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes titleGlow {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(0, 245, 255, 0.3)); }
+    50% { filter: brightness(1.2) drop-shadow(0 0 40px rgba(255, 0, 255, 0.5)); }
+  }
+
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+  }
+
+  /* Main panel */
+  .main-panel {
+    background: var(--panel-bg);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow:
+      0 0 30px rgba(0, 245, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .main-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+  }
+
+  /* Input styling */
+  .neon-input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .neon-input:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3), inset 0 0 20px rgba(0, 245, 255, 0.05);
+  }
+
+  .neon-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+  }
+
+  /* Button styling */
+  .neon-button {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(255, 0, 255, 0.2));
+    border: 1px solid var(--neon-cyan);
+    border-radius: 8px;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .neon-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .neon-button:hover::before {
+    opacity: 1;
+  }
+
+  .neon-button:hover {
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.5), 0 0 60px rgba(255, 0, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .neon-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .neon-button:disabled:hover::before {
+    opacity: 0;
+  }
+
+  .neon-button span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Track card */
+  .track-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .track-card:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+  }
+
+  /* Selected track indicator */
+  .selected-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.2), rgba(255, 0, 255, 0.2));
+    border: 1px solid var(--neon-cyan);
+    border-radius: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+    animation: indicatorPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes indicatorPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 245, 255, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(0, 245, 255, 0.6); }
+  }
+
+  /* Score display */
+  .score-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.15), rgba(176, 38, 255, 0.15));
+    border: 1px solid rgba(0, 245, 255, 0.4);
+    border-radius: 25px;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .score-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px var(--neon-cyan);
+  }
+
+  .score-max {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+  }
+
+  /* Loading animation */
+  .waveform-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 40px;
+  }
+
+  .waveform-bar {
+    width: 4px;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-magenta));
+    border-radius: 2px;
+    animation: waveform 1s ease-in-out infinite;
+  }
+
+  @keyframes waveform {
+    0%, 100% { height: 10px; }
+    50% { height: 35px; }
+  }
+
+  /* Dropdown styling */
+  .dropdown-panel {
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 245, 255, 0.1);
+  }
+
+  .dropdown-item {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .dropdown-item:hover, .dropdown-item.active {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 255, 0.1));
+  }
+
+  /* Toggle switch */
+  .neon-toggle {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .neon-toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .neon-toggle.active {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 245, 255, 0.4);
+  }
+
+  .neon-toggle.active::after {
+    transform: translateX(24px);
+    background: white;
+  }
+
+  /* Result panel */
+  .result-panel {
+    background: var(--panel-bg);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta), var(--neon-purple));
+  }
+
+  /* Reason box */
+  .reason-box {
+    background: rgba(0, 245, 255, 0.05);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 12px;
+    position: relative;
+  }
+
+  .reason-box::before {
+    content: 'ANALYSIS';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    padding: 2px 10px;
+    background: var(--deep-black);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--neon-cyan);
+  }
+
+  /* Spotify button */
+  .spotify-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #1DB954;
+    border-radius: 25px;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .spotify-link:hover {
+    background: #1ed760;
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.5);
+    transform: translateY(-2px);
+  }
+
+  /* Error styling */
+  .error-panel {
+    background: rgba(255, 0, 100, 0.1);
+    border: 1px solid rgba(255, 0, 100, 0.4);
+    border-radius: 16px;
+  }
+
+  /* Labels */
+  .label-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Footer */
+  .footer-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .footer-text span {
+    color: var(--neon-cyan);
+  }
+</style>
+
+<div class="nexttrack-container -mt-28 -mx-5 px-5">
+  <!-- Background effects -->
+  <div class="grid-bg"></div>
+
+  <div class="glow-orb glow-orb-1"></div>
+
+  <div class="glow-orb glow-orb-2"></div>
+
+  <div class="glow-orb glow-orb-3"></div>
+
+  <!-- Equalizer bars -->
+  <div class="eq-container">
+    <% 40.times do |i| %>
+      <div
+        class="eq-bar"
+        style="--max-height: <%= rand(40..150) %>px; animation-delay: <%= (i * 0.05) %>s;"
+      ></div>
+    <% end %>
+  </div>
+
+  <!-- Main content -->
+  <div class="relative z-10 container mx-auto px-4 py-16 max-w-2xl">
+    <!-- Header -->
+    <header class="text-center my-12">
+      <h1 class="title-glow mb-4">NEXTTRACK</h1>
+      <p class="subtitle">Harmonic Intelligence for Seamless Mixing</p>
+    </header>
+
+    <!-- Main Form -->
+    <div data-controller="recommendation" class="space-y-6">
+      <!-- Input Panel -->
+      <div class="main-panel p-6">
+        <form data-action="submit->recommendation#search">
+          <!-- Track Search -->
+          <div class="mb-5">
+            <label for="track_input" class="label-text block mb-3">Search Track or Enter Spotify ID</label>
+
+            <div class="relative">
+              <input
+                type="text"
+                id="track_input"
+                data-recommendation-target="trackInput"
+                data-action="input->recommendation#onInput keydown->recommendation#onKeydown"
+                placeholder="e.g., Sunset Lover or 3WRQUvzRvBDr4AxMWhXc5E"
+                autocomplete="off"
+                class="neon-input w-full px-4 py-3"
+                required
+              >
+
+              <!-- Dropdown -->
+              <div
+                data-recommendation-target="dropdown"
+                class="hidden absolute z-50 w-full mt-2 dropdown-panel"
+              >
+                <!-- Loading -->
+                <div
+                  data-recommendation-target="dropdownLoading"
+                  class="hidden p-6"
+                >
+                  <div class="waveform-loader">
+                    <% 5.times do |i| %>
+                      <div
+                        class="waveform-bar"
+                        style="animation-delay: <%= i * 0.15 %>s;"
+                      ></div>
+                    <% end %>
+                  </div>
+                  <p class="text-center text-white/50 text-sm mt-3">
+                    Searching...
+                  </p>
+                </div>
+
+                <!-- No results -->
+                <div
+                  data-recommendation-target="dropdownEmpty"
+                  class="hidden p-6 text-center text-white/40"
+                >
+                  No tracks found
+                </div>
+
+                <!-- Results -->
+                <ul
+                  data-recommendation-target="dropdownList"
+                  data-action="click->recommendation#onDropdownClick"
+                  class="divide-y divide-white/10 max-h-80 overflow-y-auto"
+                ></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected Track Preview -->
+          <div
+            data-recommendation-target="selectedTrack"
+            class="hidden mb-5 track-card p-4"
+          >
+            <div class="flex items-center gap-4">
+              <img
+                data-recommendation-target="selectedImage"
+                src=""
+                alt="Album art"
+                class="w-16 h-16 rounded-lg object-cover bg-white/10"
+              >
+
+              <div class="flex-1 min-w-0">
+                <div class="selected-indicator mb-2">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                  Selected
+                </div>
+
+                <p
+                  data-recommendation-target="selectedName"
+                  class="text-white font-semibold truncate text-lg"
+                ></p>
+
+                <p
+                  data-recommendation-target="selectedArtist"
+                  class="text-white/60 text-sm truncate"
+                ></p>
+
+                <p
+                  data-recommendation-target="selectedAlbum"
+                  class="text-white/40 text-xs truncate"
+                ></p>
+              </div>
+
+              <button
+                type="button"
+                data-action="click->recommendation#clearSelection"
+                class="
+                  p-2 text-white/40 hover:text-white hover:bg-white/10
+                  rounded-lg transition-all
+                "
+                title="Clear selection"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <input type="hidden" data-recommendation-target="trackId">
+
+          <!-- Audio Features & Options -->
+          <div class="mb-6 space-y-4 p-4 bg-white/5 rounded-xl border border-white/10">
+            <!-- Audio Features Toggle -->
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white text-sm font-medium">Audio Features</p>
+                <p class="text-white/40 text-xs">
+                  Tempo &amp; key matching via Circle of Fifths
+                </p>
+              </div>
+              <label class="relative">
+                <input
+                  type="checkbox"
+                  id="use_audio_features"
+                  data-recommendation-target="useAudioFeatures"
+                  checked
+                  class="sr-only peer"
+                >
+                <div class="neon-toggle peer-checked:active"></div>
+              </label>
+            </div>
+
+            <!-- Targets -->
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <label for="energy" class="label-text block mb-2">
+                  Energy — <span id="energy-display">0.5</span>
+                </label>
+                <input
+                  type="range"
+                  id="energy"
+                  data-recommendation-target="energy"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="0.5"
+                  class="w-full accent-cyan-400"
+                  oninput="document.getElementById('energy-display').textContent = parseFloat(this.value).toFixed(1)"
+                >
+              </div>
+              <div>
+                <label for="valence" class="label-text block mb-2">
+                  Valence — <span id="valence-display">0.5</span>
+                </label>
+                <input
+                  type="range"
+                  id="valence"
+                  data-recommendation-target="valence"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  value="0.5"
+                  class="w-full accent-cyan-400"
+                  oninput="document.getElementById('valence-display').textContent = parseFloat(this.value).toFixed(1)"
+                >
+              </div>
+              <div>
+                <label for="limit" class="label-text block mb-2">
+                  Results — <span id="limit-display">5</span>
+                </label>
+                <input
+                  type="range"
+                  id="limit"
+                  data-recommendation-target="limit"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value="5"
+                  class="w-full accent-cyan-400"
+                  oninput="document.getElementById('limit-display').textContent = this.value"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            data-recommendation-target="submitButton"
+            class="neon-button w-full py-4 px-6"
+          >
+            <span
+              data-recommendation-target="buttonText"
+              class="flex items-center justify-center gap-3"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"
+                ></path>
+              </svg>
+              Find Next Track
+            </span>
+            <svg
+              data-recommendation-target="spinner"
+              class="hidden animate-spin h-5 w-5 mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading Message -->
+      <div data-recommendation-target="loadingMessage" class="hidden">
+        <div class="main-panel p-6 text-center">
+          <div class="waveform-loader mb-4">
+            <% 7.times do |i| %>
+              <div
+                class="waveform-bar"
+                style="animation-delay: <%= i * 0.12 %>s;"
+              ></div>
+            <% end %>
+          </div>
+
+          <p class="text-white font-medium mb-2">
+            Analyzing Harmonic Compatibility...
+          </p>
+
+          <p class="text-white/40 text-sm">
+            Matching cultural similarity, tempo ratio, and key relationships
+          </p>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div data-recommendation-target="results" class="hidden">
+        <div class="result-panel p-6">
+          <!-- Seed Track -->
+          <div class="mb-6 pb-4 border-b border-white/10">
+            <p class="label-text mb-1">Seed Track</p>
+            <p data-recommendation-target="seedTrack" class="text-white/70"></p>
+            <p data-recommendation-target="seedFeatures" class="text-white/40 text-xs mt-1"></p>
+          </div>
+
+          <!-- Top Recommendation (Highlighted) -->
+          <div class="mb-6">
+            <p class="label-text mb-2">Top Recommendation</p>
+
+            <h2
+              data-recommendation-target="trackName"
+              class="text-3xl font-bold text-white mb-1"
+              style="font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em;"
+            ></h2>
+
+            <p
+              data-recommendation-target="artistName"
+              class="text-white/60 text-lg"
+            ></p>
+          </div>
+
+          <!-- Confidence Score -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <div class="score-display">
+              <span class="text-white/50 text-sm">Confidence</span>
+              <span class="score-value" data-recommendation-target="score"></span>
+              <span class="score-max">%</span>
+            </div>
+            <span
+              data-recommendation-target="audioFeaturesStatus"
+              class="
+                px-3 py-1 bg-white/5 border border-white/20 rounded-full
+                text-white/60 text-sm
+              "
+            ></span>
+          </div>
+
+          <!-- Reason -->
+          <div class="reason-box p-4 pt-6 mb-6">
+            <p
+              data-recommendation-target="reason"
+              class="text-white/80 text-sm leading-relaxed"
+            ></p>
+          </div>
+
+          <!-- Player -->
+          <div
+            data-recommendation-target="playerContainer"
+            class="rounded-xl overflow-hidden mb-6"
+          ></div>
+
+          <!-- More Recommendations -->
+          <div class="mb-6">
+            <p class="label-text mb-3">Other Recommendations</p>
+            <div
+              data-recommendation-target="otherRecommendations"
+              class="space-y-2"
+            >
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between">
+            <a
+              data-recommendation-target="spotifyLink"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="spotify-link"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"
+                />
+              </svg>
+              Open in Spotify
+            </a>
+
+            <button
+              data-action="click->recommendation#reset"
+              class="
+                text-white/40 hover:text-white text-sm transition-colors
+                flex items-center gap-2
+              "
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                ></path>
+              </svg>
+              Search Again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div data-recommendation-target="error" class="hidden">
+        <div class="error-panel p-6">
+          <div class="flex items-start gap-3 mb-4">
+            <svg
+              class="w-6 h-6 text-red-400 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              ></path>
+            </svg>
+            <div>
+              <p class="text-red-400 font-semibold mb-1">Error</p>
+              <p
+                data-recommendation-target="errorMessage"
+                class="text-red-300/80 text-sm"
+              ></p>
+            </div>
+          </div>
+
+          <button
+            data-action="click->recommendation#reset"
+            class="
+              text-red-400/80 hover:text-red-300 text-sm transition-colors
+              flex items-center gap-2
+            "
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center footer-text text-sm">
+      <p>
+        Powered by
+        <span>MusicBrainz</span>
+        •
+        <span>Spotify</span>
+        •
+        <span>ReccoBeats</span>
+      </p>
+      <p class="mt-1 text-xs">Harmonic mixing via Circle of Fifths</p>
+    </footer>
+  </div>
+</div>
