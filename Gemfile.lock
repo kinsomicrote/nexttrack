@@ -228,7 +228,7 @@ GEM
       oauth2 (>= 2.0.2, < 3)
       omniauth (~> 2.0)
     ostruct (0.6.3)
-    parallel (1.27.0)
+    parallel (2.0.0)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -391,7 +391,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  parallel (~> 1.26)
+  parallel (~> 2.0)
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.1)

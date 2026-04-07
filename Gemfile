@@ -64,4 +64,4 @@ gem "faraday", "~> 2.14"
 gem "amatch", "~> 0.4"
 
 # Parallel processing for concurrent API calls
-gem "parallel", "~> 1.26"
+gem "parallel", "~> 2.0"
